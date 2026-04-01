@@ -1,4 +1,4 @@
-name: 캘린더 일정 동기화
+name: Daily Calendar Sync
 
 on:
   schedule:
