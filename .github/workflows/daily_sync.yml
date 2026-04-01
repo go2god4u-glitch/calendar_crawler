@@ -1,0 +1,32 @@
+name: 캘린더 일정 동기화
+
+on:
+  schedule:
+    # 매일 오전 1시 (KST) = UTC 16:00
+    - cron: "0 16 * * *"
+  workflow_dispatch:  # 수동 실행 허용
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 코드 체크아웃
+        uses: actions/checkout@v4
+
+      - name: Python 3.11 설정
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: 의존성 설치
+        run: pip install -r requirements.txt
+
+      - name: 캘린더 동기화 실행
+        env:
+          PORTAL_USERNAME: ${{ secrets.PORTAL_USERNAME }}
+          PORTAL_PASSWORD: ${{ secrets.PORTAL_PASSWORD }}
+          GOOGLE_SERVICE_ACCOUNT_JSON: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_JSON }}
+          GOOGLE_CAL_BIOSEARCH: ${{ secrets.GOOGLE_CAL_BIOSEARCH }}
+          GOOGLE_CAL_DIRECTOR: ${{ secrets.GOOGLE_CAL_DIRECTOR }}
+        run: python main.py
